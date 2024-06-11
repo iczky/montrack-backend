@@ -1,13 +1,16 @@
 package com.montrackBackend.montrack.wallet.Controller;
 
 import com.montrackBackend.montrack.response.Response;
+import com.montrackBackend.montrack.transactions.entity.TransactionCategory;
 import com.montrackBackend.montrack.wallet.dto.WalletDTO;
+import com.montrackBackend.montrack.wallet.dto.WalletSummaryResponseDTO;
 import com.montrackBackend.montrack.wallet.entity.Wallet;
 import com.montrackBackend.montrack.wallet.service.WalletService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/wallet")
@@ -41,5 +44,10 @@ public class WalletController {
     @PutMapping("/{id}")
     public ResponseEntity<Response<Wallet>> updateWallet(@PathVariable Long id, @RequestBody WalletDTO walletDTO){
         return Response.successResponse("Update successfully", walletService.updateWallet(id, walletDTO));
+    }
+
+    @GetMapping("/summary/year")
+    public ResponseEntity<Response<Map<TransactionCategory, Long>>> getSummaryWallet(){
+        return Response.successResponse("Retrieve summary successfully", walletService.getSummaryByYear());
     }
 }

@@ -2,6 +2,7 @@ package com.montrackBackend.montrack.wallet.entity;
 
 import com.montrackBackend.montrack.users.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class Wallet {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @NotNull(message = "Name wallet must not be null")
     @Column(name = "name")
     private String name;
 
@@ -29,6 +31,7 @@ public class Wallet {
     private User user;
 
     @NotNull
+    @Min(value = 0, message = "Balance must be non-negative")
     @Column(name = "balance", nullable = false)
     private Long balance;
 

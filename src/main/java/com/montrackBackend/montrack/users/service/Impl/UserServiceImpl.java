@@ -3,10 +3,7 @@ package com.montrackBackend.montrack.users.service.Impl;
 import com.montrackBackend.montrack.exceptions.NotExistException;
 import com.montrackBackend.montrack.auth.dto.ForgotPasswordRequestDto;
 import com.montrackBackend.montrack.auth.dto.ForgotPasswordResponseDto;
-import com.montrackBackend.montrack.users.dto.RegisterRequestDto;
-import com.montrackBackend.montrack.users.dto.RegisterResponseDto;
-import com.montrackBackend.montrack.users.dto.SetPinReqDto;
-import com.montrackBackend.montrack.users.dto.SetPinRespDto;
+import com.montrackBackend.montrack.users.dto.*;
 import com.montrackBackend.montrack.users.entity.User;
 import com.montrackBackend.montrack.users.entity.UserPin;
 import com.montrackBackend.montrack.users.repository.UserRepository;
@@ -74,6 +71,13 @@ public class UserServiceImpl implements UserService {
         user.setPin(newPin);
         var savedUser = userRepository.save(user);
         return SetPinRespDto.fromEntity(savedUser);
+    }
+
+    @Override
+    public ProfileResponseDto getProfile(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotExistException("User is not authenticated"));
+
+        return ProfileResponseDto.fromEntity(user);
     }
 
 }

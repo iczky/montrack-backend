@@ -32,11 +32,8 @@ public class UsersController {
 
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(){
-        SecurityContext context = SecurityContextHolder.getContext();
-        log.info(context.toString());
-        Authentication authentication = context.getAuthentication();
-        String name = authentication.getName();
-        return Response.successResponse("User Profile", userService.findByEmail(name));
+        var claims = GetContext.claims();
+        return Response.successResponse("User Profile", userService.getProfile((String) claims.get("sub")));
     }
 
     @PostMapping("/set-pin")

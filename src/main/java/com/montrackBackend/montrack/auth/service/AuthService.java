@@ -8,6 +8,6 @@ import org.springframework.security.core.Authentication;
 
 public interface AuthService {
     String generateToken(Authentication authentication);
-
     ForgotPasswordResponseDto forgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
+    String getOrGenerateToken(String email, Authentication authentication);
 }

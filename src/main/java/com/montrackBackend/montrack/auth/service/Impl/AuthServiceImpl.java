@@ -4,6 +4,7 @@ import com.montrackBackend.montrack.auth.dto.ForgotPasswordRequestDto;
 import com.montrackBackend.montrack.auth.dto.ForgotPasswordResponseDto;
 import com.montrackBackend.montrack.auth.dto.LoginRequestDto;
 import com.montrackBackend.montrack.auth.dto.LoginResponseDto;
+import com.montrackBackend.montrack.auth.repository.AuthRedisRepository;
 import com.montrackBackend.montrack.auth.service.AuthService;
 import com.montrackBackend.montrack.exceptions.NotExistException;
 import com.montrackBackend.montrack.users.entity.User;
@@ -29,11 +30,13 @@ public class AuthServiceImpl implements AuthService {
     private final JwtEncoder jwtEncoder;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final AuthRedisRepository redisRepository;
 
-    public AuthServiceImpl(JwtEncoder jwtEncoder, PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public AuthServiceImpl(JwtEncoder jwtEncoder, PasswordEncoder passwordEncoder, UserRepository userRepository, AuthRedisRepository redisRepository) {
         this.jwtEncoder = jwtEncoder;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.redisRepository = redisRepository;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         JwtClaimsSet claims =JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(10, ChronoUnit.HOURS))
+                .expiresAt(now.plus(25, ChronoUnit.SECONDS))
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();
@@ -74,4 +77,19 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(newUser);
         return ForgotPasswordResponseDto.fromEntity(newUser);
     }
+
+    @Override
+    public String getOrGenerateToken(String email, Authentication authentication) {
+        String existingJwtKey = redisRepository.getJwtKey(email);
+
+        if (existingJwtKey != null && !existingJwtKey.isEmpty()){
+            return existingJwtKey;
+        }
+
+        String newToken = generateToken(authentication);
+        redisRepository.saveJwtKey(email, newToken);
+        return newToken;
+    }
+
+
 }

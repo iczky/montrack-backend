@@ -37,10 +37,13 @@ public class AuthController {
                     loginRequestDto.getPassword()));
         log.info(authentication.toString());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = authService.generateToken(authentication);
+
+        String token = authService.getOrGenerateToken(loginRequestDto.getEmail(), authentication);
+
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setMessage("Login Success");
         loginResponseDto.setToken(token);
+
         return Response.successResponse("Login Success", loginResponseDto);
     }
 

@@ -17,11 +17,11 @@ public class AuthRedisRepository {
         this.valueOperations = redisTemplate.opsForValue();
     }
 
-    public void saveJwtKey(String email, String jwtkey){
-        valueOperations.set(STRING_KEY_PREFIX+email, jwtkey, 1, TimeUnit.HOURS);
+    public void saveJwtKey(String email, String jwtKey){
+        valueOperations.set(STRING_KEY_PREFIX+email, jwtKey, 25, TimeUnit.SECONDS);
     }
 
-    public String getJwtkey(String email){
+    public String getJwtKey(String email){
         return valueOperations.get(STRING_KEY_PREFIX+email);
     }
 

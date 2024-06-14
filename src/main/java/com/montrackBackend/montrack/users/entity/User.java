@@ -42,10 +42,13 @@ public class User {
     @Column(name = "hashed_password", nullable = false)
     private String hashed_password;
 
-    @NotNull
     @Size(max = 255)
     @Column(name = "salt", nullable = false)
     private String salt;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "pin_id", referencedColumnName = "id")
+    private UserPin pin;
 
     @Size(max = 3)
     @Column(name = "active_currency")
@@ -62,11 +65,6 @@ public class User {
     @Column(name = "deleted_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deleted_at;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @NotNull
-    @JoinColumn(name = "pin_id", referencedColumnName = "id")
-    private UserPin pin;
 
     @PrePersist
     protected void onCreate() {

@@ -20,12 +20,7 @@ public class UserPin {
     @NotNull
     @Size(max = 255)
     @Column(name = "hashed_pin", nullable = false)
-    private String hashed_pin;
-
-    @NotNull
-    @Size(max = 255)
-    @Column(name = "salt", nullable = false)
-    private String salt;
+    private String pin;
 
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

@@ -1,0 +1,9 @@
+package com.montrackBackend.montrack.auth.dto;
+
+import lombok.Data;
+
+@Data
+public class LoginRequestDto {
+    private String email;
+    private String password;
+}
